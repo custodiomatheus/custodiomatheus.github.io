@@ -1,1 +1,203 @@
-Hello Word
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Repositórios</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      }
+      .header {
+        width: 100%;
+        height: 20vh;
+        background-color: #14181a;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .header-title {
+        font-size: 40px;
+        color: #fff;
+        margin: 0 0 0 12%;
+      }
+      .header-icons {
+        align-self: flex-end;
+        margin: 0 2% 2vh 0;
+      }
+      .icon {
+        height: 28px;
+        cursor: pointer;
+      }
+      .icon:first-child {
+        margin-right: 15px;
+      }
+      .section {
+        width: 100%;
+        height: 80vh;
+        background-color: #293033;
+      }
+
+      .section-container {
+        width: 75%;
+        height: 70vh;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .section-content {
+        width: 55%;
+        height: 100%;
+      }
+
+      .content-subtitle {
+        color: #c7c9c9;
+        margin-top: 13vh;
+      }
+
+      .scroll {
+        width: 100%;
+        max-height: 45vh;
+        overflow-y: scroll;
+      }
+
+      .content-list {
+        width: 80%;
+        height: 100%;
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .content-list--item {
+        width: 100%;
+        height: 55px;
+        color: #c7c9c9;
+        border-radius: 10px;
+        background-color: #3d474c;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      .content-list--item:not(:last-child) {
+        margin-bottom: 5vh;
+      }
+
+      .separator {
+        width: 3%;
+        height: 100%;
+        background-color: #3c78db;
+        border-radius: 10px 0 0 10px;
+        grid-column: 0 1;
+      }
+
+      .item-data {
+        width: 97%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      .item-title {
+        font-weight: 700;
+        min-width: 30%;
+        margin: 0 0 0 5%;
+      }
+
+      .item-circle {
+        font-size: 40px;
+      }
+
+      .item-text {
+        margin: 0 7%;
+        font-size: 14px;
+      }
+
+      .section-octocat {
+        width: 45%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .octocat-img {
+        height: 340px;
+        margin-left: 10%;
+      }
+    </style>
+  </head>
+  <body onload="searchRepositories()">
+    <header class="header">
+      <h1 class="header-title">Custodio's Portifólio</h1>
+      <div class="header-icons">
+        <img class="icon" src="linkedIn.png" alt="LinkedIn Logo" />
+        <img class="icon" src="git.png" alt="Github Logo" />
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="section-container">
+        <div class="section-content">
+          <h3 class="content-subtitle">Repositórios</h3>
+          <div class="scroll">
+            <ul class="content-list" id="repository_list"></ul>
+          </div>
+        </div>
+
+        <div class="section-octocat">
+          <img class="octocat-img" src="octocat.png" alt="Github Logo" />
+        </div>
+      </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </body>
+</html>
+
+<script>
+  const searchRepositories = () => {
+    axios
+      .get("https://api.github.com/users/custodiomatheus/repos")
+      .then((response) => {
+        response.data.map((repository) => {
+          const item = document.createElement("li");
+          item.setAttribute("class", "content-list--item");
+          item.onclick = function () {
+            openRepository(repository.svn_url);
+          };
+
+          const separator = document.createElement("div");
+          separator.setAttribute("class", "separator");
+
+          const repositoryName = document.createElement("span");
+          repositoryName.setAttribute("class", "item-title");
+          repositoryName.appendChild(document.createTextNode(repository.name));
+
+          const circle = document.createElement("div");
+          circle.setAttribute("class", "item-circle");
+          circle.appendChild(document.createTextNode(`\u2219`));
+
+          const repositoryDescription = document.createElement("span");
+          repositoryDescription.setAttribute("class", "item-text");
+          repositoryDescription.appendChild(
+            document.createTextNode(repository.description || "Não informado")
+          );
+
+          item.appendChild(separator);
+          item.appendChild(repositoryName);
+          item.appendChild(circle);
+          item.appendChild(repositoryDescription);
+
+          document.getElementById("repository_list").appendChild(item);
+        });
+      });
+  };
+
+  const openRepository = (url) => {
+    window.open(url);
+  };
+</script>
